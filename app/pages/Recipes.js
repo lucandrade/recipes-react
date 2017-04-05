@@ -6,7 +6,7 @@ import {
     TouchableHighlight
 } from 'react-native';
 
-import Request from '../utils/Request';
+import ReloadButton from '../components/ReloadButton';
 
 export default class Recipes extends Component {
     componentDidMount() {
@@ -24,6 +24,7 @@ export default class Recipes extends Component {
     }
 
     goToRecipe(data) {
+        this.props.startNavigation();
         this.props.navigator.push({
             id: `recipe/${data.id}`,
             title: data.title,
@@ -46,15 +47,21 @@ export default class Recipes extends Component {
             return <Text>Erro ao carregar receita</Text>;
         }
 
+        let reloadButton = null;
+
+        if (!recipes.fetching) {
+            reloadButton = <ReloadButton onPress={this.nextPage.bind(this)} />;
+        }
+
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         const dataSource = ds.cloneWithRows(recipes.list);
         return (
-            <View>
-                <ListView style={{padding: 10}}
+            <View style={{paddingBottom: 40}}>
+                <ListView style={{padding: 10, paddingBottom: 30}}
                     dataSource={dataSource}
                     renderRow={this.renderRow.bind(this)}
                     renderSeparator={this.renderRowSeparator} />
-                <Text onPress={this.nextPage.bind(this)}>Carregar</Text>
+                {reloadButton}
             </View>
         );
     }

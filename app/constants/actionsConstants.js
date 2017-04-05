@@ -3,3 +3,5 @@ export const FETCHED_RECIPES = 'FETCHED_RECIPES';
 export const NEXT_PAGE_RECIPES = 'NEXT_PAGE_RECIPES';
 export const ERROR_RECIPES = 'ERROR_RECIPES';
 export const FETCHED_RECIPE = 'FETCHED_RECIPE';
+export const NAV_START = 'NAV_START';
+export const NAV_FINISH = 'NAV_FINISH';

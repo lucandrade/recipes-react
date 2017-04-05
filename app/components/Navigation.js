@@ -25,6 +25,7 @@ class Navigation extends Component {
                 initialRoute={this.getInitialRoute()}
                 sceneStyle={this.getContainerStyle()}
                 renderScene={this.renderScene.bind(this)}
+                onDidFocus={this.props.actions.finishNavigation}
                 navigationBar={this.renderNavigationBar()} />
         );
     }
@@ -118,24 +119,24 @@ class Navigation extends Component {
         });
     }
 
+    goBack(navigator) {
+        this.props.actions.startNavigation();
+        navigator.pop();
+    }
+
     renderLeftButton(route, navigator) {
-        if (navigator.getCurrentRoutes().length === 1) {
+        const { topbar } = this.props.state;
+
+        if (navigator.getCurrentRoutes().length === 1 || topbar.started) {
             return null;
         }
 
         return (
             <Text
                 style={this.getLeftButtonStyle()}
-                onPress={navigator.pop}>
+                onPress={this.goBack.bind(this, navigator)}>
                 Voltar
             </Text>
-        );
-
-        return (
-            <Icon
-                name="chevron-left"
-                onPress={navigator.pop}
-                style={this.getLeftButtonStyle()} />
         );
     }
 

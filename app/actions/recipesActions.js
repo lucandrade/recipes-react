@@ -1,6 +1,26 @@
 import * as constants from '../constants/actionsConstants';
 import Request from '../utils/Request';
 
+function setNavigating(state) {
+    if (state) {
+        return {type: constants.NAV_START};
+    }
+
+    return {type: constants.NAV_FINISH};
+}
+
+export function startNavigation() {
+    return function(dispatch) {
+        return dispatch(setNavigating(true));
+    }
+}
+
+export function finishNavigation() {
+    return function(dispatch) {
+        return dispatch(setNavigating(false));
+    }
+}
+
 export function nextPage() {
     return {type: constants.NEXT_PAGE_RECIPES};
 }
