@@ -111,6 +111,9 @@ export default class Recipe extends Component {
                     <Text style={this.getDateStyle()}>
                         {recipe.release_at}
                     </Text>
+                    <Text style={this.getCategoriesStyle()}>
+                        {recipe.categories.map(c => c.name).join(', ')}
+                    </Text>
                     {ingredients}
                     <Text ref='text' style={this.getSectionStyle()}>
                         MODO DE PREPARO
@@ -239,6 +242,16 @@ export default class Recipe extends Component {
             fontSize: 16,
             fontWeight: '500',
             color: '#555',
+            marginTop: 5,
+        };
+    }
+
+    getCategoriesStyle() {
+        return {
+            fontStyle: 'italic',
+            fontSize: 18,
+            fontWeight: '700',
+            color: 'pink',
             marginTop: 5,
             marginBottom: 10,
         };

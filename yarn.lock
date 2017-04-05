@@ -2965,6 +2965,10 @@ react-devtools-core@^2.0.8:
     cross-env "^3.1.4"
     ws "^2.0.3"
 
+react-native-device-info@^0.10.1:
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-0.10.1.tgz#8eb675fa624a356a14455c97ec82590ee1d1fdd8"
+
 react-native-splash-screen@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/react-native-splash-screen/-/react-native-splash-screen-2.0.0.tgz#d03caaef7d92a0ac1eab60ee4204a1d6bf8234ec"

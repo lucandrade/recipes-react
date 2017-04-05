@@ -1,9 +1,11 @@
 import * as constants from '../constants/actionsConstants';
 
-let list;
+let list, page, newState;
 const initialState = {
     list: [],
+    filter: null,
     page: 0,
+    total: 0,
     recipe: {},
     fetched: false,
     fetching: false,
@@ -13,23 +15,28 @@ const initialState = {
 export default function recipes(state = initialState, action) {
     switch (action.type) {
         case constants.FETCH_RECIPES:
+            newState = {...state, error: null, fetching: true, filter: action.payload.filter};
+            if (action.payload.page === 1) {
+                newState.list = [];
+            }
+            return newState;
+        case constants.FETCH_RECIPE:
             return {...state, error: null, fetching: true};
+        case constants.SET_FILTER:
+            return {...state, filter: action.payload};
         case constants.ERROR_RECIPES:
             return {...state, error: true};
         case constants.FETCHED_RECIPES:
-            list = state.list.concat(action.payload.data);
+            page = action.payload.current_page || 1;
+            list = page > 1 ? state.list.concat(action.payload.data) : action.payload.data;
             return {
                 ...state,
                 list,
-                page: action.payload.current_page || 0,
+                page,
+                total: action.payload.total || 0,
                 fetching: false,
                 error: null,
                 fetched: true,
-            };
-        case constants.NEXT_PAGE_RECIPES:
-            // list = nextPage(state.list);
-            return {
-                ...state
             };
         case constants.FETCHED_RECIPE:
             return {

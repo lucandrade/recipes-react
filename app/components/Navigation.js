@@ -39,7 +39,7 @@ class Navigation extends Component {
 
     getContainerStyle() {
         const paddingTop = this.barHeight;
-        const paddingBottom = 30;
+        const paddingBottom = 0;
         const backgroundColor = 'white';
 
         return {

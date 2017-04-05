@@ -21,12 +21,20 @@ export function finishNavigation() {
     }
 }
 
+export function setFilter(filter) {
+    return {type: constants.SET_FILTER, payload: filter};
+}
+
 export function nextPage() {
     return {type: constants.NEXT_PAGE_RECIPES};
 }
 
-function setFetching() {
-    return {type: constants.FETCH_RECIPES};
+function setFetching(filter=null, page) {
+    return {type: constants.FETCH_RECIPES, payload: { filter, page }};
+}
+
+function setFetchingRecipe() {
+    return {type: constants.FETCH_RECIPE};
 }
 
 function setError() {
@@ -41,11 +49,15 @@ function fetchedRecipe(recipe) {
     return {type: constants.FETCHED_RECIPE, payload: recipe};
 }
 
-export function fetchList(page=1) {
+export function fetchList(page=1, filter=null) {
+    let url = `/recipes?page=${page}`;
+    if (filter) {
+        url+= `&text=${filter}`;
+    }
     return function(dispatch) {
         return setTimeout(() => {
-            dispatch(setFetching());
-            Request.get(`/recipes?page=${page}`)
+            dispatch(setFetching(filter, page));
+            Request.get(url)
                 .then(response => {
                     if (response.data && response.data.payload) {
                         dispatch(fetchedRecipes(response.data.payload));
@@ -63,7 +75,7 @@ export function fetchList(page=1) {
 export function fetchRecipe(recipeId, recipeList) {
     return function(dispatch) {
         return setTimeout(() => {
-            dispatch(setFetching());
+            dispatch(setFetchingRecipe());
             setTimeout(() => {
                 const recipe = recipeList.filter(item => item.id === recipeId);
 
