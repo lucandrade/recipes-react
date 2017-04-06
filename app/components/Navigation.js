@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import Recipes from '../pages/Recipes';
 import Recipe from '../pages/Recipe';
 import * as recipesActions from '../actions/recipesActions';
+import Styles from '../utils/Styles';
 
 class Navigation extends Component {
     constructor(props) {
@@ -23,7 +24,7 @@ class Navigation extends Component {
         return (
             <Navigator
                 initialRoute={this.getInitialRoute()}
-                sceneStyle={this.getContainerStyle()}
+                sceneStyle={Styles.navigator}
                 renderScene={this.renderScene.bind(this)}
                 onDidFocus={this.props.actions.finishNavigation}
                 navigationBar={this.renderNavigationBar()} />

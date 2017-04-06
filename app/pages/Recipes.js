@@ -4,9 +4,11 @@ import {
     Text,
     TextInput,
     ListView,
+    Image,
     TouchableHighlight
 } from 'react-native';
 
+import Styles from '../utils/Styles';
 import ReloadButton from '../components/ReloadButton';
 
 export default class Recipes extends Component {
@@ -62,53 +64,107 @@ export default class Recipes extends Component {
         }, 1000);
     }
 
+    renderMessage(message) {
+        return (
+            <View style={[Styles.containerContent, Styles.containerBordered, Styles.containerShadow]}>
+                <Text>
+                    {message}
+                </Text>
+            </View>
+        );
+    }
+
+    renderHeader(recipes) {
+        return (
+            <View style={[
+                Styles.containerContent,
+                Styles.containerBordered,
+                Styles.containerShadow,
+                {flexDirection: 'row', alignItems: 'center'}]}>
+                <Text>
+                    {recipes.total} receitas
+                </Text>
+                <TextInput
+                    value={recipes.filter || ''}
+                    underlineColorAndroid={'transparent'}
+                    placeholder={'Buscar'}
+                    onSubmitEditing={this.sendFilter.bind(this)}
+                    onChangeText={this.updateFilter.bind(this)}
+                    style={Styles.listInput} />
+            </View>
+        );
+    }
+
+    renderRecipes(recipes) {
+        const ds = new ListView.DataSource({
+            rowHasChanged: (r1, r2) => r1 !== r2
+        });
+        const dataSource = ds.cloneWithRows(recipes.list);
+        return (
+            <View style={[Styles.containerContent, Styles.containerBordered, Styles.containerShadow, {flex: 1}]}>
+                <ListView
+                    dataSource={dataSource}
+                    renderRow={this.renderRecipe.bind(this)}
+                    onEndReachedThreshold={10}
+                    onEndReached={this.loadNextPage.bind(this)} />
+            </View>
+        );
+    }
+
+    renderRecipe(data) {
+        return (
+            <TouchableHighlight
+                underlayColor={'transparent'}
+                activeOpacity={1}
+                onPress={this.goToRecipe.bind(this, data)}>
+                <View style={Styles.listRow}>
+                    <View>
+                        <Image
+                            style={Styles.listImage}
+                            source={{uri: 'http://localhost:8000/receita.jpg'}} />
+                    </View>
+                    <View style={Styles.listText}>
+                        <Text style={Styles.listTitle}>
+                            {data.title}
+                        </Text>
+                        <Text style={Styles.listSubTitle}>
+                            Tipo: {data.categories.map(c => c.name).join(', ')}
+                        </Text>
+                    </View>
+                </View>
+            </TouchableHighlight>
+        );
+    }
+
     render() {
         const { recipes } = this.props;
 
         if (recipes.error !== null) {
-            return (
-                <View>
-                    <Text>Erro ao carregar receita</Text>
-                    <ReloadButton onPress={this.props.fetchList} />
-                </View>
-            );
+            return this.renderMessage('Erro ao carregar receitas');
         }
 
         if ((!(recipes.list && recipes.list.length) && recipes.fetching) || recipes.page === 0) {
-            return <Text>Carregando</Text>;
+            return this.renderMessage('Carregando');
         }
 
         let listView = null;
 
         if (recipes.list && recipes.list.length) {
-            const ds = new ListView.DataSource({
-                rowHasChanged: (r1, r2) => r1 !== r2
-            });
-            const dataSource = ds.cloneWithRows(recipes.list);
-            listView = <ListView style={{paddingLeft: 10, paddingRight: 10}}
-                dataSource={dataSource}
-                renderRow={this.renderRow.bind(this)}
-                renderSeparator={this.renderRowSeparator}
-                onEndReachedThreshold={10}
-                onEndReached={this.loadNextPage.bind(this)} />;
+            listView = this.renderRecipes(recipes);
         }
+
+        return (
+            <View style={Styles.listContainer}>
+                {this.renderHeader(recipes)}
+                {listView}
+            </View>
+        );
 
         let loading = `Exibindo ${recipes.list.length}`;
 
         if (recipes.fetching) {
             loading = 'Carregando';
         }
-
-        const inputStyle = {
-            marginLeft: 10,
-            padding: 0,
-            paddingLeft: 5,
-            paddingRight: 5,
-            borderColor: '#888',
-            borderWidth: 1,
-            borderRadius: 5,
-            flex: 1
-        };
 
         return (
             <View style={{flexDirection: 'column', justifyContent: 'flex-start', flex: 1}}>
@@ -129,39 +185,6 @@ export default class Recipes extends Component {
                     <Text>{loading}</Text>
                 </View>
             </View>
-        );
-    }
-
-    renderRow(data) {
-        const titleStyle = {
-            fontWeight: 'bold',
-            marginBottom: 10,
-            fontSize: 20
-        };
-
-        const text = data.directions.length > 120 ?
-            data.directions.substring(0, 120) + '...' :
-            data.directions;
-
-        return (
-            <TouchableHighlight onPress={this.goToRecipe.bind(this, data)}>
-                <View style={{ paddingTop: 10, paddingBottom: 10 }}>
-                    <Text style={titleStyle}>{data.title}</Text>
-                    <Text>{text}</Text>
-                </View>
-            </TouchableHighlight>
-        );
-    }
-
-    renderRowSeparator(sectionID, rowID, adjacentRowHighlighted) {
-        const style = {
-            height: adjacentRowHighlighted ? 4 : 1,
-            backgroundColor: adjacentRowHighlighted ? '#3B5998' : '#CCCCCC',
-        };
-        return (
-            <View
-                key={`${sectionID}-${rowID}`}
-                style={style} />
         );
     }
 }
