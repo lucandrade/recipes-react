@@ -128,7 +128,7 @@ export default class Recipes extends Component {
                     <View>
                         <Image
                             style={Styles.listImage}
-                            source={{uri: 'http://localhost:8000/receita.jpg'}} />
+                            source={{uri: data.image}} />
                     </View>
                     <View style={Styles.listText}>
                         <Text style={Styles.listTitle}>

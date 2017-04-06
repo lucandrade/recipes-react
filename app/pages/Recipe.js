@@ -94,7 +94,7 @@ export default class Recipe extends Component {
                     ]}>
                     <Image
                         style={{width: '100%', height: 120}}
-                        source={{uri: 'http://localhost:8000/receita.jpg'}} />
+                        source={{uri: recipe.image}} />
                     <View style={[Styles.containerContentInset]}>
                         <Text style={this.getTitleStyle()}>
                             {recipe.title}
