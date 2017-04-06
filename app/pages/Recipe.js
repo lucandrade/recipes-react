@@ -4,8 +4,11 @@ import {
     ListView,
     ScrollView,
     View,
+    Image,
     Platform
 } from 'react-native';
+
+import Styles from '../utils/Styles';
 
 export default class Recipe extends Component {
     constructor(props) {
@@ -79,7 +82,70 @@ export default class Recipe extends Component {
         }
     }
 
+    renderRecipe(recipe) {
+        return (
+            <ScrollView ref='recipe-view'>
+                <View style={
+                    [
+                        Styles.container,
+                        Styles.containerBordered,
+                        Styles.containerShadow,
+                        Styles.containerLast
+                    ]}>
+                    <Image
+                        style={{width: '100%', height: 120}}
+                        source={{uri: 'http://localhost:8000/receita.jpg'}} />
+                    <View style={[Styles.containerContentInset]}>
+                        <Text style={this.getTitleStyle()}>
+                            {recipe.title}
+                        </Text>
+                        <Text style={this.getDateStyle()}>
+                            {recipe.release_at}
+                        </Text>
+                        <Text style={this.getCategoriesStyle()}>
+                            {recipe.categories.map(c => c.name).join(', ')}
+                        </Text>
+                        <Text ref='text'>
+                            MODO DE PREPARO
+                        </Text>
+                        <Text>
+                            {recipe.directions}
+                        </Text>
+                    </View>
+                </View>
+            </ScrollView>
+        );
+    }
+
+    renderMessage(message) {
+        return (
+            <View style={[Styles.containerContent, Styles.containerBordered, Styles.containerShadow]}>
+                <Text>
+                    {message}
+                </Text>
+            </View>
+        );
+    }
+
     render() {
+        const { recipes } = this.props;
+
+        if (recipes.error !== null) {
+            return this.renderMessage('Erro');
+        }
+
+        if (recipes.fetching) {
+            return this.renderMessage('Carregando');
+        }
+
+        if (!(recipes.recipe && recipes.recipe.id)) {
+            return this.renderMessage('Erro ao carregar receita');
+        }
+
+        return this.renderRecipe(recipes.recipe);
+    }
+
+    renderdd() {
         const { recipes } = this.props;
 
         if (recipes.error !== null) {
@@ -239,20 +305,18 @@ export default class Recipe extends Component {
     getDateStyle() {
         return {
             fontStyle: 'italic',
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: '500',
             color: '#555',
-            marginTop: 5,
         };
     }
 
     getCategoriesStyle() {
         return {
             fontStyle: 'italic',
-            fontSize: 18,
+            fontSize: 14,
             fontWeight: '700',
             color: 'pink',
-            marginTop: 5,
             marginBottom: 10,
         };
     }

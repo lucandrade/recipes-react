@@ -101,7 +101,14 @@ export default class Recipes extends Component {
         });
         const dataSource = ds.cloneWithRows(recipes.list);
         return (
-            <View style={[Styles.containerContent, Styles.containerBordered, Styles.containerShadow, {flex: 1}]}>
+            <View style={
+                [
+                    Styles.containerContent,
+                    Styles.containerBordered,
+                    Styles.containerShadow,
+                    Styles.containerLast,
+                    {flex: 1}
+                ]}>
                 <ListView
                     dataSource={dataSource}
                     renderRow={this.renderRecipe.bind(this)}

@@ -16,7 +16,7 @@ const CONTAINER_SHADOW_RADIUS = 2;
 
 const navigator = {
     paddingTop: TOPBAR_HEIGHT,
-    paddingBottom: 30,
+    // paddingBottom: 30,
     backgroundColor: APP_BG,
 };
 
@@ -56,6 +56,10 @@ const containerShadow = {
     shadowOffset: CONTAINER_SHADOW_OFFSET,
     shadowOpacity: CONTAINER_SHADOW_OPACITY,
     shadowRadius: CONTAINER_SHADOW_RADIUS,
+};
+
+const containerLast = {
+    marginBottom: 30,
 };
 
 const listContainer = {
@@ -113,6 +117,7 @@ const styles = StyleSheet.create({
     containerBordered,
     containerShadow,
     containerContentInset,
+    containerLast,
     listContainer,
     listInput,
     listRow,
